@@ -59,7 +59,7 @@ def check_box(n, box):
     return True
 
 def is_legal(n, coord, board):
-    return (check_cols(n, coord[-1], board) and check_rows(n, coord[0], board) and check_box(n, get_box(coord)) and (n>0) and (n<10))
+    return (check_cols(n, coord[-1], board) and check_rows(n, coord[0], board) and check_box(n, get_box(coord)))
 
 def is_complete(board):
     return (not 0 in board.values())
@@ -72,21 +72,14 @@ def all_legal_vals(coord, board):
     return legal_vals
 
 def get_mrv(open_coords, board):
-    """
-    Returns the unfilled box coordinate (coord) with minimum remaining [legal] values (MRV) 
-    and the corresponding values (available domain)
-    """
-    #Could this be improved?
     possible_moves = [(all_legal_vals(coord, board), coord) for coord in open_coords]
     n_moves_per_box = [len(moves[0]) for moves in possible_moves]
     idx = np.argmin(n_moves_per_box)
     return open_coords[idx], possible_moves[idx][0]
 
 def backtracking(board):
-    """Takes a board and returns solved board."""
-    # TODO: implement this
-    
-    b = board.copy()
+
+    b = board
     
     "Backtracking search to solve soduku"
     # If soduku is complete return it.
@@ -118,7 +111,7 @@ solution_data = dict()
 
 if __name__ == '__main__':
     #  Read boards from source.
-    src_filename = 'sudokus_start.txt'
+    src_filename = 'starter/sudokus_start.txt'
     try:
         srcfile = open(src_filename, "r")
         sudoku_list = srcfile.read()
@@ -137,7 +130,7 @@ if __name__ == '__main__':
             continue
 
         # Parse boards to dict representation, scanning board L to R, Up to Down
-        board = { ROW[r] + COL[c]: int(line[9*r+c])
+        board = {ROW[r] + COL[c]: int(line[9*r+c])
                   for r in range(9) for c in range(9)}
 
         #Reset pertinent globals:
@@ -157,6 +150,7 @@ if __name__ == '__main__':
         end = time.time()
     
         time_to_solve = end-start
+        print(time_to_solve)
 
         solution_data[line] = {'solution':solution, 'time':time_to_solve}
         
